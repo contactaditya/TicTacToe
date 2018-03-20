@@ -1,27 +1,26 @@
 <html>
 <head>
 <style>
-	#container {
-		margin: 0 auto;
-	}
+#container {
+  margin: 0 auto;
+}
 	
-	/* Defining class square to make changes to CSS*/
+/* Defining class square to make changes to CSS*/
 	
-	.square {
-		float: left;
-		width: 100px;
-		height: 100px;
-		border: 4px solid #FF7A5A;
-		text-align: center;
-		line-height: 100px;
-		background-color: #FFB85F;
-	}
+.square {
+  float: left;
+  width: 100px;
+  height: 100px;
+  border: 4px solid #FF7A5A;
+  text-align: center;
+  line-height: 100px;
+  background-color: #FFB85F;
+}
 	
-	.square:hover 
-    {
-        opacity: 1;
-        border: 4px solid #551a8b;
-    }
+.square:hover {
+  opacity: 1;
+  border: 4px solid #551a8b;
+}
 	
 </style>
 
@@ -34,234 +33,203 @@ var TicTacToe = {
 	/* If the same symbol is present in these pairs, that player has won */
 
 	winning_squares: [	
-						['0', '1', '2'],
-						['3', '4', '5'],
-						['6', '7', '8'],
-						['0', '3', '6'],
-						['0', '4', '8'],
-						['1', '4', '7'],
-						['2', '5', '8'],
-						['2', '4', '6']
-	],
+	                  ['0', '1', '2'],
+			  ['3', '4', '5'],
+			  ['6', '7', '8'],
+			  ['0', '3', '6'],
+			  ['0', '4', '8'],
+			  ['1', '4', '7'],
+			  ['2', '5', '8'],
+			  ['2', '4', '6']
+	                 ],
 	
 	init: function() {
-		/* Draw the board */
-        /* Start the container off as empty, then add squares to it */
+	  /* Draw the board */
+          /* Start the container off as empty, then add squares to it */
 
-		$("#container").html('');
-        /* create the square for each row, and give them an id of 0 to 9 */
+	  $("#container").html('');
+          /* create the square for each row, and give them an id of 0 to 9 */
 
-		for (i = 0; i < 9; i++) {
-			$("#container").append("<div id=" + i + " onclick='TicTacToe.clicked(this.id)' class='square'></div>");
+	  for (i = 0; i < 9; i++) {
+	    $("#container").append("<div id=" + i + " onclick='TicTacToe.clicked(this.id)' class='square'></div>");
 
-                /* Only put 3 squares on a row   */
-
-			if (((i + 1) % 3) == 0) {
-				$("#container").append("<div style='clear:both;'>");
-			}
-		}
+            /* Only put 3 squares on a row   */
+            if (((i + 1) % 3) == 0) {
+	      $("#container").append("<div style='clear:both;'>");
+	    }
+	  }
               
-               /*  X makes the first move   */
-		this.player = 'X';
+          /*  X makes the first move   */
+	  this.player = 'X';
 	},
 
-clicked: function(square_id) {
-                /* See if this square is empty, if so put an X or O in it  */
+	clicked: function(square_id) {
+         /* See if this square is empty, if so put an X or O in it  */
 		
-		if ("" == $('#' + square_id).html()) {
-			$('#' + square_id).text(this.player).css({ 'color': 'Blue', 'font-size': '300%', 'font-weight': 'bold'});
+	 if ("" == $('#' + square_id).html()) {
+	   $('#' + square_id).text(this.player).css({ 'color': 'Blue', 'font-size': '300%', 'font-weight': 'bold'});
 
-                        /*  Call is_game_won function to see if this move wins the game   */
+            /*  Call is_game_won function to see if this move wins the game   */
             currentplayer = this.player;
-			game_is_won = this.is_game_won(square_id);
+	    game_is_won = this.is_game_won(square_id);
                        
-                        /* if the game_is_won, declare victory for this.player  */
+            /* if the game_is_won, declare victory for this.player  */
 
-			if (game_is_won) 
-			{
-                         /* use setTimeout to delay confirm message so that last move is recorded  */
-                         /* this is needed for some browsers and mobile devices  */
+	    if (game_is_won) {
+            /* use setTimeout to delay confirm message so that last move is recorded  */
+            /* this is needed for some browsers and mobile devices  */
 
-             	setTimeout(function(){TicTacToe.end_game(currentplayer);},100);
-				return;
-			}
-				
-			else
-			{
-				game_is_tied = this.is_game_tied();
-			}
+               setTimeout(function(){TicTacToe.end_game(currentplayer);},100);
+	       return;
+	    }
+	    else {
+	       game_is_tied = this.is_game_tied();
+	    } 
 			
-			if (game_is_tied) 
-			{
-                         /* use setTimeout to delay confirm message so that last move is recorded  */
-				setTimeout(function(){TicTacToe.end_game();},100);
-				return;
-			}
+	    if (game_is_tied) {
+              /* use setTimeout to delay confirm message so that last move is recorded  */
+	      setTimeout(function(){TicTacToe.end_game();},100);
+	      return;
+	    }
                    
-                        /* if not won or tied, switch to the other player's move  */
+            /* if not won or tied, switch to the other player's move  */
 
-			this.player = 'O';
+	    this.player = 'O';
 					
-				winning_spot = this.where_to_win();
+	    winning_spot = this.where_to_win();
 
-				if (winning_spot > -1) 
-				{
-					currentplayer = this.player;
-					$('#' + winning_spot).text(currentplayer);
+	    if (winning_spot > -1) {
+	      currentplayer = this.player;
+	      $('#' + winning_spot).text(currentplayer);
 					
-					game_is_won = this.is_game_won(winning_spot);
+	      game_is_won = this.is_game_won(winning_spot);
 						
-					if (game_is_won) 
-					{
-
-                       	setTimeout(function(){TicTacToe.end_game(currentplayer);},100);
-						return;
-					}
-				}
+	      if (game_is_won) {
+ 		setTimeout(function(){TicTacToe.end_game(currentplayer);},100);
+		return;
+	      }
+	    }
 					
-				var blocking_spot = -1;
-				blocking_spot = this.where_to_lose();
+	    var blocking_spot = -1;
+	    blocking_spot = this.where_to_lose();
 	       	
-				if(blocking_spot > -1)
-				{
-					var new_square_id = blocking_spot;
-				}
-				else
-				{
-					var new_square_id = Math.floor(Math.random() * (10));
-				}
+	    if(blocking_spot > -1) {
+	       var new_square_id = blocking_spot;
+	    }
+	    else {
+	       var new_square_id = Math.floor(Math.random() * (10));
+	    }
 				
-				
-				while (this.player == 'O') 
-				{
-					if ("" == $('#' + new_square_id).html()) 
-					{
-						$('#' + new_square_id).text(this.player).css({ 'color': 'red', 'font-size': '300%', 'font-weight': 'bold'});;
+	    while (this.player == 'O') {
+	      if ("" == $('#' + new_square_id).html()) {
+		$('#' + new_square_id).text(this.player).css({ 'color': 'red', 'font-size': '300%', 'font-weight': 'bold'});;
 						
-						currentplayer = this.player;
-						game_is_won = this.is_game_won(new_square_id.toString());
+		currentplayer = this.player;
+		game_is_won = this.is_game_won(new_square_id.toString());
 						
-						if (game_is_won) 
-						{
-
-                        	setTimeout(function(){TicTacToe.end_game(currentplayer);},100);
-							return;
-						}
+		if (game_is_won) {
+                  setTimeout(function(){TicTacToe.end_game(currentplayer);},100);
+		  return;
+		}
 				
-						else
-
-							game_is_tied = this.is_game_tied();
+		else {
+		  game_is_tied = this.is_game_tied();
+		}
 							
-						if (game_is_tied) 
-						{
-							setTimeout(function(){TicTacToe.end_game();},100);
-							return;
-						}
-						
-						this.player ='X';
-						
-					}
-					else
-					{
-						new_square_id = Math.floor(Math.random() * (10));
-					}
-				} 
-						
+		if (game_is_tied) {
+		  setTimeout(function(){TicTacToe.end_game();},100);
+		  return;
 		}
-			
-	},
+						
+		this.player ='X';
+	      }
+	      else {
+		new_square_id = Math.floor(Math.random() * (10));
+	      }
+	    } 					
+	 }		
+       },
 
-	/* Did clicking on this square result in a victory? */
+       /* Did clicking on this square result in a victory? */
 
-	is_game_won: function(square_id) {
+       is_game_won: function(square_id) {
 		
-		for (i in this.winning_squares) 
-		{
-			if (jQuery.inArray(square_id, this.winning_squares[i]) != -1) {
-				var squares = this.winning_squares[i];
-				var pattern = '';
-				for (j in squares) {
-					pattern += $('#' + squares[j]).html();
-				}
-				symbol = this.player;
-				if (symbol + symbol + symbol == pattern) {
-					return true;
-				}
-			}
-		}
-		return false;
-	},
+       for (i in this.winning_squares) {
+	 if (jQuery.inArray(square_id, this.winning_squares[i]) != -1) {
+	   var squares = this.winning_squares[i];
+	   var pattern = '';
+	   for (j in squares) {
+	     pattern += $('#' + squares[j]).html();
+	   }
+	   symbol = this.player;
+	   if (symbol + symbol + symbol == pattern) {
+	     return true;
+	   }
+	 }
+       }
+       return false;
+    },
 	
 
-	where_to_win: function() 
-	{
-		var test_id;
-		for (l = 0; l < 9; l++) 
-		{	
-			if ("" == $('#' + l).html()) 
-			{
-				$('#' + l).text(this.player);
-				
-				test_id = l.toString();
-				
-				game_is_won = this.is_game_won(test_id);
-				
-				$('#' + l).text("");
+    where_to_win: function() {
+      var test_id;
+      for (l = 0; l < 9; l++) {	
+	if ("" == $('#' + l).html()) {
+	  $('#' + l).text(this.player);
+	  test_id = l.toString();
+	  game_is_won = this.is_game_won(test_id);
+	  $('#' + l).text("");	
+	}		
+      }
+      return -1;
 			
-			}
-			
-		}
-		return -1;
-			
-	},
+    },
 	
-	where_to_lose: function() 
-	{
-		
-		for (m = 0; m < 9; m++) 
-		{
-			if ("" == $('#' + m).html()) 
-			{
-				$('#' + m).text('X');
-				this.player = 'X';
-				game_is_lost = this.is_game_won(m.toString());
-				this.player = 'O';
-				$('#' + m).text("");
-				
-				if (game_is_lost) 
-				{
-					return m;
-				}
-			}
-		}
-		return -1;
-			
-	},
-
-	/* All squares filled but no winner? */
-
-	is_game_tied: function() {
-		for (i = 0; i < 9; i++) {
-			if ('' == $('#' + i).html())
-				return false;
-		}
-		return true;
-	},
-
-	/* Display message and restart if requested */
-	end_game: function(winner) {
-		if (winner)
-			msg = winner + ' won! Play again?';
-		else
-			msg =  'The game has ended in a tie. Play again?';
-		restart_game = confirm(msg);
-		if (restart_game)
-			this.init();
+    where_to_lose: function() {
+      for (m = 0; m < 9; m++) {
+        if ("" == $('#' + m).html()) {
+	  $('#' + m).text('X');
+	  this.player = 'X';
+	  game_is_lost = this.is_game_won(m.toString());
+	  this.player = 'O';
+	  $('#' + m).text("");
+	  if (game_is_lost) {
+	    return m;
+	  }
 	}
+      }
+      return -1;
+			
+    },
+
+    /* All squares filled but no winner? */
+
+    is_game_tied: function() {
+      for (i = 0; i < 9; i++) {
+	if ('' == $('#' + i).html()) {
+	  return false;
+	}
+      }
+      return true;
+    },
+
+    /* Display message and restart if requested */
+    end_game: function(winner) {
+      if (winner) {
+	msg = winner + ' won! Play again?';
+      }
+      else {
+	msg =  'The game has ended in a tie. Play again?';
+      }
+      restart_game = confirm(msg);
+      if (restart_game) {
+	this.init();
+      }
+    }
 };
 
-$(document).ready(function(){
-	TicTacToe.init();
+$(document).ready(function() {
+   TicTacToe.init();
 });
 
 
